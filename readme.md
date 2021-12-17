@@ -1,20 +1,12 @@
-# The *LSDTopoTools* lsdtopytools container
+# The *LSDTopoTools* OpenCV container
 
 ![](https://raw.githubusercontent.com/LSDtopotools/lsdtt_viz_docker/master/images/LSD-logo.png)
 
-This docker container has all the components you need to run the full lsdtopotools stack.
-
-* *LSDTopoTools* command line tools
-* *lsdtopytools* for using LSDTopoTools interactively in python
-* *lsdviztools* for various automated plotting routines used to make figures for publications (lower level plotting if you just want to see what the code has done is in lsdtopytools)
-
-The package also includes a python geospatial stack:
-
-* fiona, gdal, rasterio, geopandas, folium, gdal, cartopy, and shapely
-
-It also allows some command line processing with GDAL. See some tips for using the GDAL command line tools here: https://lsdtopotools.github.io/LSDTT_documentation/LSDTT_introduction_to_geospatial_data.html#_gdal
+This docker container allows you to run the LSDTopoTools command line tools for valley extraction. It has the OpenCV dependency installed.
 
 ## Instructions
+
+WARNING: These have not been updated yet. Stay tuned for updates.
 
 ### Installing Docker
 
