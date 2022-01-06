@@ -15,8 +15,8 @@ These are the bare bones instructions. For a bit more detail and potential bug f
 1. Download and install [Docker Desktop for Windows](https://hub.docker.com/editions/community/docker-ce-desktop-windows) (only works with Windows 10 enterprise), [Docker Desktop for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac), or Docker for [Ubuntu](https://hub.docker.com/editions/community/docker-ce-server-ubuntu) or [Debian](https://hub.docker.com/editions/community/docker-ce-server-debian).
   * If you are installing Docker Desktop for Windows you should use the WSL 2 Backend. WSL 2 has been supported on Windows since around 2020. More details are on the [Docker for Windows documentation](https://docs.docker.com/desktop/windows/install/). 
   * On MacOS we recommend installing docker using brew: `brew cask install docker`
-  * On MacOs and Linux, after you install docker you will need to add permissions: `sudo usermod -a -G docker $USER`
-2. We will henceforth assume that you actually have a functioning version of Docker on your host machine. If you want more details about how to use docker, or getting it set up (particularly in Windows, in Linux and MacOS this is more straightforward), see our [Docker notes](#docker-notes).
+  * On MacOS and Linux, after you install docker you will need to add permissions: `sudo usermod -a -G docker $USER`
+2. We will henceforth assume that you actually have a functioning version of Docker on your host machine. If you want more details about how to use Docker, or getting it set up (particularly in Windows, in Linux and MacOS this is more straightforward), see our [Docker notes](#docker-notes).
 
 ### Running the container
 
@@ -105,5 +105,5 @@ Once you have done this you will need to log out and log back in again.
 
 #### Docker for Windows
 
-This section used to be very complicated, with many tips and tricks and gotchas. But Docker Desktop for Windows is much more streamlined now and you should just follow the instruction on the [Docker for Windows installation website](https://docs.docker.com/desktop/windows/install/)
+This section used to be very complicated, with many tips and tricks and gotchas. But Docker Desktop for Windows is much more streamlined now and you should just follow the instructions on the [Docker for Windows installation website](https://docs.docker.com/desktop/windows/install/)
 
