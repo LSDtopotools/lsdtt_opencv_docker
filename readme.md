@@ -6,7 +6,7 @@ This docker container allows you to run the LSDTopoTools command line tools for 
 
 ## Instructions
 
-WARNING: These have not been updated yet. Stay tuned for updates.
+These instructions tell you how to download the valley extraction tools and run them in a Docker environment.
 
 ### Installing Docker
 
