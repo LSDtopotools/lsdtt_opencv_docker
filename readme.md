@@ -27,17 +27,25 @@ These are the bare bones instructions. For a bit more detail and potential bug f
 2. For the purposes of this tutorial, I will assume you are using windows and that you have made a directory `C:\LSDTopoTools`.
   * You can put this directory anywhere you want as long as you remember where it is. You don't need to put anything in this directory yet.
 
-#### Part 2: Download and run the container
+#### Part 2: Build the container 
 
 _Preamble_: Once you have downloaded docker, you can control how much memory you give the docker containers. The default is 3Gb. If you have even moderate sized DEM data, this will not be enough. You can go into the docker settings (varies by operating system, use a search engine to figure out where they are) and increase the memory.
 
-1. To get the container, go into a terminal (MacOS or Linux) or Powershell window (Windows) that has docker enabled and run:
+1. First of all, clone this GitHub repository onto your local machine. Create a new directory on your machine where you want to store the files. Go into a terminal (MacOS or Linux) or Powershell window (Windows), navigate to the directory you just created and run:
 ```console
-$ docker pull lsdtopotools/lsdtt_pytools_docker
+git clone https://github.com/LSDtopotools/lsdtt_opencv_docker
 ```
-2. Now you need to run the container:
+2. Now build the docker container using the Dockerfile. Navigate to the new directory:
 ```console
-$ docker run -it -v C:\LSDTopoTools:/LSDTopoTools lsdtopotools/lsdtt_pytools_docker
+cd lsdtt_opencv_docker
+```
+and then build the docker file
+```console
+docker build -t lsdtt_opencv 
+```
+3. Now you need to run the container:
+```console
+$ docker run -it -v C:\LSDTopoTools:/LSDTopoTools lsdtt_opencv
 ```
   1. The `-it` means "interactive".
   2. The `-v` stands for "volume" and in practice it links the files in the docker container with files in your host operating system.
@@ -45,46 +53,15 @@ $ docker run -it -v C:\LSDTopoTools:/LSDTopoTools lsdtopotools/lsdtt_pytools_doc
 3. Once you do this you will get a `#` symbol showing that you are inside the container. You can now do *LSDTopoTools* stuff.
 
 
-
 #### Running command line tools
 
-1. Command line tools are ready for use immediately. Try `# lsdtt-basic-metrics`
-2. To see what is possible, check out the following documentation:
-  * Note: for the below instructions, you will need the example datasets. Grab these with `# sh Get_LSDTT_example_data.sh`
-  * https://lsdtopotools.github.io/LSDTT_documentation/LSDTT_basic_usage.html
-  * https://lsdtopotools.github.io/LSDTT_documentation/LSDTT_channel_extraction.html
-  * https://lsdtopotools.github.io/LSDTT_documentation/LSDTT_chi_analysis.html
+1. Command line tools are ready for use immediately. Try `# lsdtt-valley-metrics`
 
-#### Running lsdviztools scripts. 
-
-1. The lsdviztools package comes with some scripts. To see what they do use the `-h` flag. The scripts are:
-  * `lsdtt_grabopentopographydata` for downloading DEMs, converting them to lsdtopotools format and simple hillshading
-  * `lsdtt_plotbasicrasters` for lots of basic visualisation routines like draped plots swaths, channel profiles, etc
-  * `lsdtt_plotchianalysis` for plotting chi profiles, see Mudd et al. 2014 JGR-ES https://doi.org/10.1002/2013JF002981
-  * `lsdtt_plotconcavityanalysis` for plotting analysis of channel concavity index, see Mudd et al 2018 ESURF https://doi.org/10.5194/esurf-6-505-2018   
-
-#### Running a jupyter notebook from this container
-
-1. The lsdpytools container can also serve as a host for [jupyter notebooks](https://jupyter.org/)
-2. You need to open your docker container with a port:
+2. To run the valley extraction methods, you need to have a DEM in ENVI bil format and a suitable parameter file in your `C:\LSDTopoTools` directory. Let's assume your parameter file is called `LSDTT_valleys.param`. We would run the valley metrics algorithm by navigating to the `LSDTopoTools` where the DEM is stored in docker and then run:
 
 ```console
-# docker run -it -v C:\LSDTopoTools:/LSDTopoTools -p 8888:8888 lsdtopotools/lsdtt_pytools_docker
+lsdtt-valley-metrics LSDTT_valleys.param
 ```
-
-  * Note that you should update the `C:\LSDTopoTools` to reflect the directory structure on your locak machine.
-
-3. Then, inside the container, start the notebook:
-
-```console
-# jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root
-```
-
-4. When you run this command, it will give you some html addresses. *These will not work from your host computer!!* But these addresses do show you a `token`: you can see it in the address after `token=`.
-  1. Instead, go into a browser on your host computer and go to http://localhost:8888/
-  2. Then, in the password box, insert the `token` that was shown in the docker container.
-  3. Yay, you can now start working with notebooks, using all the fun geospatial stuff that is in this container!
-
 
 ## Docker notes
 
@@ -141,22 +118,3 @@ Second, if you have that and have it installed, you might also need to add yours
 8. Click on Windows icon on bottom left and start Docker for Windows. This will start docker windows service.
 9. Start Windows Powershell and type docker --version. It will show Docker version 17.09.1-ce, build 19e2cf6, or whatever version you have.
 
-#### Notes on dockerhub (only for Simon)
-
-These are notes for how to push the most recent container to dockerhub. This is required because Docker stopped automated builds. The notes are a reminder to Simon only. If you are not Simon you should only continue reading if you need something to help you fall asleep. 
-
-1. Navigate to the repository and build the container locally with the appropriate tag:
-
-```console
-$ docker build -t lsdtopotools/lsdtt_pytools_docker .
-```
-
-2. Login to docker using `docker login`
-
-3. Push the container to docker hub:
-
-```console
-$ docker push lsdtopotools/lsdtt_pytools_docker:latest
-```
-
-4. If you are working from home, you then need to wait a very, very long time. 
