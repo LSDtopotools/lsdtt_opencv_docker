@@ -41,7 +41,7 @@ cd lsdtt_opencv_docker
 ```
 and then build the docker file
 ```console
-docker build -t lsdtt_opencv 
+docker build -t lsdtt_opencv .
 ```
 3. Now you need to run the container:
 ```console
