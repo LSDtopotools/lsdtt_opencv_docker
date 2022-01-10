@@ -30,7 +30,11 @@ These are the bare bones instructions. For a bit more detail and potential bug f
 
 _Preamble_: Once you have downloaded docker, you can control how much memory you give the docker containers. The default is 3Gb. If you have even moderate sized DEM data, this will not be enough. You can go into the docker settings (varies by operating system, use a search engine to figure out where they are) and increase the memory.
 
-There are 2 options for getting the docker container so that you can run the valley extraction tools. The first (preferred) option is to simply download and run the docker container that we have already built. To do this, just run the following command in a terminal (MacOS or Linux) or Powershell window (Windows):
+There are 2 options for getting the docker container so that you can run the valley extraction tools.
+
+#### Option 1: download the docker container from DockerHub
+
+The first (preferred) option is to simply download and run the docker container that we have already built. To do this, just run the following command in a terminal (MacOS or Linux) or Powershell window (Windows):
 
 Windows:
 
@@ -42,9 +46,13 @@ Linux:
 ```console
 docker run -it -v /LSDTopoTools:/LSDTopoTools lsdtopotools/lsdtt_opencv_docker
 ```
+  1. The `-it` means "interactive".
+  2. The `-v` stands for "volume" and in practice it links the files in the docker container with files in your host operating system.
+  3. After the `-v` you need to tell docker where the directories are on both the host operating system (in this case `C:\LSDTopoTools`) and the container (in this case `/LSDTopoTools`). These are separated by a colon (`:`).
 
-#### Part 2: Build the container 
+Once you do this you will get a `#` symbol showing that you are inside the container. You can now do *LSDTopoTools* stuff.
 
+#### Option 2: build the container on your local machine (most users should use option 1)
 
 1. First of all, clone this GitHub repository onto your local machine. Create a new directory on your machine where you want to store the files. Navigate to the directory you just created and run:
 
@@ -56,7 +64,7 @@ git clone https://github.com/LSDtopotools/lsdtt_opencv_docker
 ```console
 cd lsdtt_opencv_docker
 ```
-and then build the docker file
+and then build the docker file. NOTE: this will take a long time (an hour or so).
 
 ```console
 docker build -t lsdtt_opencv_docker .
@@ -65,11 +73,6 @@ docker build -t lsdtt_opencv_docker .
 ```console
 $ docker run -it -v C:\LSDTopoTools:/LSDTopoTools lsdtt_opencv_docker
 ```
-  1. The `-it` means "interactive".
-  2. The `-v` stands for "volume" and in practice it links the files in the docker container with files in your host operating system.
-  3. After the `-v` you need to tell docker where the directories are on both the host operating system (in this case `C:\LSDTopoTools`) and the container (in this case `/LSDTopoTools`). These are separated by a colon (`:`).
-3. Once you do this you will get a `#` symbol showing that you are inside the container. You can now do *LSDTopoTools* stuff.
-
 
 #### Running command line tools
 
