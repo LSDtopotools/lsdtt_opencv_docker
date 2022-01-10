@@ -3,6 +3,7 @@
 ![](https://raw.githubusercontent.com/LSDtopotools/lsdtt_viz_docker/master/images/LSD-logo.png)
 
 This docker container allows you to run the LSDTopoTools command line tools for valley extraction. It has the OpenCV dependency installed.
+It also allows you to run all the other [LSDTopoTools command line tools](https://github.com/LSDtopotools/LSDTopoTools2). 
 
 ## Instructions
 
@@ -12,7 +13,7 @@ These instructions tell you how to download the valley extraction tools and run 
 
 These are the bare bones instructions. For a bit more detail and potential bug fixes, scroll down to the section on [Docker notes](#docker-notes).
 
-1. Download and install [Docker Desktop for Windows](https://hub.docker.com/editions/community/docker-ce-desktop-windows) (only works with Windows 10 enterprise), [Docker Desktop for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac), or Docker for [Ubuntu](https://hub.docker.com/editions/community/docker-ce-server-ubuntu) or [Debian](https://hub.docker.com/editions/community/docker-ce-server-debian).
+1. Download and install [Docker Desktop for Windows](https://hub.docker.com/editions/community/docker-ce-desktop-windows) (only works with Windows 10+), [Docker Desktop for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac), or Docker for [Ubuntu](https://hub.docker.com/editions/community/docker-ce-server-ubuntu) or [Debian](https://hub.docker.com/editions/community/docker-ce-server-debian).
   * If you are installing Docker Desktop for Windows you should use the WSL 2 Backend. WSL 2 has been supported on Windows since around 2020. More details are on the [Docker for Windows documentation](https://docs.docker.com/desktop/windows/install/). 
   * On MacOS we recommend installing docker using brew: `brew cask install docker`
   * On MacOS and Linux, after you install docker you will need to add permissions: `sudo usermod -a -G docker $USER`
@@ -22,8 +23,8 @@ These are the bare bones instructions. For a bit more detail and potential bug f
 
 #### Part 1: set up an LSDTopoTools directory on your host machine
 
-1. You will want to be able to see *LSDTopoTools* output on your host operating system, so we will need to create a directory for hosting your *LSDTopoTools* data, code, and scripts.
-2. For the purposes of this tutorial, I will assume you are using Windows and that you have made a directory `C:\LSDTopoTools`.
+1. You will want to be able to see *LSDTopoTools* output on your host operating system, so you will need to create a directory for hosting your *LSDTopoTools* data, code, and scripts.
+2. For the purposes of this tutorial, we will assume you are using Windows and that you have made a directory `C:\LSDTopoTools`.
   * You can put this directory anywhere you want as long as you remember where it is. You don't need to put anything in this directory yet.
 
 #### Part 2: start the docker container
@@ -76,7 +77,13 @@ $ docker run -it -v C:\LSDTopoTools:/LSDTopoTools lsdtt_opencv_docker
 
 #### Running command line tools
 
-1. Command line tools are ready for use immediately. Try `# lsdtt-valley-metrics`
+1. Command line tools are ready for use immediately. Try this:
+
+```console
+# lsdtt-valley-metrics -h
+```
+
+You will get a screen saying you need a parameter file, and it will also tell you that some help files have been generated. If you look in your current directory there will be an .html file called *lsdtt-valley-metrics-README.html* that has instructions on how to run the command line tool.  
 
 2. To run the valley extraction methods, you need to have a DEM in ENVI bil format and a suitable parameter file in your `C:\LSDTopoTools` directory. Let's assume your parameter file is called `LSDTT_valleys.param`. We would run the valley metrics algorithm by navigating to the `LSDTopoTools` where the DEM is stored in docker and then run:
 
@@ -84,11 +91,55 @@ $ docker run -it -v C:\LSDTopoTools:/LSDTopoTools lsdtt_opencv_docker
 lsdtt-valley-metrics LSDTT_valleys.param
 ```
 
-3. You can get a help file for the command line tools with the `-h` flag, which will print an html and csv file with the various options that you can use in your parameter files:
+#### A minimally functioning parameter file
 
-```console
-lsdtt-valley-metrics -h
+Here is an example parameter file that will extract a valley width with the minimum amount of settings:
+
 ```
+# File information
+read fname: My_DEM
+
+# Parameters for preprocessing
+# Parameters that will change on the basis of DEM grid spacing. 
+# window radius should be ~3x DEM grid spacing
+# threshold pixels should be ~100 for 30m DEM and a few thousand for 2m DEM
+surface_fitting_window_radius: 90
+threshold_contributing_pixels: 100
+
+# Some steps to visualise outputs
+write_hillshade: true
+print_channels_to_csv: true
+remove_seas: true
+
+# Parameters for floodplain extraction
+use_absolute_thresholds: true
+relief_threshold: 10
+slope_threshold: 0.05
+threshold_SO: 4
+fill_floodplain: true
+
+# Parameters to get the valley centreline
+channel_source_fname: coords.csv
+get_valley_centreline: false
+convert_csv_to_geojson: true
+centreline_loops: 5
+trough_scaling_factor: 0.5
+extract_single_channel: true
+
+# Parameters for valley widths
+# These will depend on grid resolution.
+# the bank search radius will depend on the valley width. It should be around half the width of the valley. 
+get_valley_widths: true
+width_node_spacing: 50
+valley_banks_search_radius: 50
+```
+
+Some things to note:
+
+1. This file will need to be in the same directory as your DEM that is in *ENVI bil* format. 
+2. The read fname line near the top needs to have the prefix of your DEM. So if your DEM is composed of files `Tay.bil` and `Tay.hdr` then this line needs to read `read fname: Tay`. The `read fname` is case sensitive. 
+3. You navigate to this directory in your docker shell and call `lsdtt-valley-metrics` from there. 
+4. You will, in this directory, also need a csv file called `coords.csv` with the `latitude,longitude` in the first row and the lat-long coordinates of the starting point of your channel in the second row. 
 
 
 ## Docker notes
