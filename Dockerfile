@@ -56,6 +56,9 @@ RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/master.zip \
 && cmake --build . \
 && make install
 
+# Add gdal
+RUN conda install -y gdal
+
 # Set the working directory
 WORKDIR /LSDTopoTools
 
